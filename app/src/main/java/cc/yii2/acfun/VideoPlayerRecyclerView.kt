@@ -1,7 +1,5 @@
 package cc.yii2.acfun
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Point
@@ -15,7 +13,6 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -224,16 +221,11 @@ class VideoPlayerRecyclerView : RecyclerView {
 
         viewHolderParent.setOnClickListener {
             Log.d(TAG, href)
-            val clipboard = contextHateKotlin!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip: ClipData = ClipData.newUri(contextHateKotlin!!.contentResolver, "URI", Uri.parse(href))
-            clipboard.setPrimaryClip(clip)
-            Toast.makeText(contextHateKotlin, "Success", Toast.LENGTH_LONG).show()
-
-//            val builder: CustomTabsIntent.Builder = CustomTabsIntent.Builder()
-//            val customTabsIntent: CustomTabsIntent = builder.build()
-//            val intent: Intent = customTabsIntent.intent
-//            intent.setData(Uri.parse(href))
-//            context.startActivity(intent, customTabsIntent.startAnimationBundle)
+            val builder: CustomTabsIntent.Builder = CustomTabsIntent.Builder()
+            val customTabsIntent: CustomTabsIntent = builder.build()
+            val intent: Intent = customTabsIntent.intent
+            intent.data = Uri.parse(href)
+            context.startActivity(intent, customTabsIntent.startAnimationBundle)
         }
 
         val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
