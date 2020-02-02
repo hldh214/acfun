@@ -14,9 +14,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import okhttp3.*
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import java.io.IOException
 import java.util.*
-import java.util.regex.Pattern
 
 
 class MainActivity : AppCompatActivity() {
@@ -64,19 +65,35 @@ class MainActivity : AppCompatActivity() {
                 response: Response
             ) {
                 val myResponse = response.body!!.string()
+
+                val document = Jsoup.parse(myResponse)
+                val cols = document.select("div.col-sm-6.col-md-4.col-lg-4")
+                val mediaObjects: ArrayList<MediaObject> = ArrayList()
+
                 runOnUiThread {
-                    val pattern =
-                        Pattern.compile(
-                            """href="(?<href>.+?)">\s*<noscript\s+style="display:\s+none">\s*<img\s+src="(?<thumbnail>.+?)"\s+title="(?<title>.+?)""""
+                    for (col: Element in cols) {
+                        val href: String = col.selectFirst("a").attr("href")
+                        val title: String = col.selectFirst("span.video-title").text()
+                        val thumbnail: String =
+                            col.selectFirst("img.lazy.img-responsive").attr("data-original")
+                        val duration: String = col.selectFirst("div.duration").text()
+                        val video_added: String = col.selectFirst("div.video-added").text()
+                        val video_views: String = col.selectFirst("div.video-views").text()
+                        val video_rating: String = col.selectFirst("div.video-rating").text()
+                        val media_url = thumbnail.replace("\\d+.jpg".toRegex(), "preview.mp4")
+
+                        mediaObjects.add(
+                            MediaObject(
+                                title,
+                                media_url,
+                                thumbnail,
+                                href,
+                                duration,
+                                video_added,
+                                video_views,
+                                video_rating
+                            )
                         )
-                    val matcher = pattern.matcher(myResponse)
-                    val mediaObjects: ArrayList<MediaObject> = ArrayList()
-                    while (matcher.find()) {
-                        val thumbnail = matcher.group("thumbnail")
-                        val title = matcher.group("title")!!
-                        val href = matcher.group("href")!!
-                        val media_url = thumbnail!!.replace("\\d+.jpg".toRegex(), "preview.mp4")
-                        mediaObjects.add(MediaObject(title, media_url, thumbnail, href))
                     }
 
                     mRecyclerView!!.setMediaObjects(mediaObjects)

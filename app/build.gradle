@@ -34,18 +34,21 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // recyclerview
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // exoplayer
-    implementation "com.google.android.exoplayer:exoplayer:2.8.4"
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
 
     // glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     // okhttp
-    implementation "com.squareup.okhttp3:okhttp:4.3.1"
+    implementation 'com.squareup.okhttp3:okhttp:4.3.1'
 
     // support:customtabs
-    implementation "androidx.browser:browser:1.2.0"
+    implementation 'androidx.browser:browser:1.2.0'
+
+    // jsoup
+    implementation 'org.jsoup:jsoup:1.12.1'
 }
