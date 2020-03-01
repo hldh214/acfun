@@ -1,9 +1,13 @@
 package cc.yii2.acfun
 
 import android.content.Context
+import android.net.Uri
+import android.net.UrlQuerySanitizer
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +21,13 @@ import okhttp3.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.IOException
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
     private var mRecyclerView: VideoPlayerRecyclerView? = null
     private var editTextVideoListUrl: EditText? = null
+    private var button_previous_page: Button? = null
+    private var button_next_page: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +47,68 @@ class MainActivity : AppCompatActivity() {
             false
         })
 
+        button_previous_page = findViewById(R.id.button_previous_page)
+        button_next_page = findViewById(R.id.button_next_page)
+
+        button_previous_page!!.setOnClickListener {
+            val uri = paginate(
+                Uri.parse(editTextVideoListUrl!!.text.toString()),
+                "prev"
+            )
+            editTextVideoListUrl!!.setText(uri.toString())
+
+            initRecyclerView()
+        }
+
+        button_next_page!!.setOnClickListener {
+            val uri = paginate(
+                Uri.parse(editTextVideoListUrl!!.text.toString()),
+                "next"
+            )
+            editTextVideoListUrl!!.setText(uri.toString())
+
+            initRecyclerView()
+        }
+
         initRecyclerView()
+    }
+
+    private fun paginate(
+        uri: Uri,
+        type: String,
+        page_param: String = "page"
+    ): Uri? {
+        val params: Set<String> = uri.getQueryParameterNames()
+        val newUri: Uri.Builder = uri.buildUpon().clearQuery()
+
+        for (param in params) {
+            if (param != page_param) {
+                newUri.appendQueryParameter(param, uri.getQueryParameter(param))
+
+                continue
+            }
+
+            if (type == "prev") {
+                var page_num = uri.getQueryParameter(param)!!.toInt() - 1
+
+                if (page_num <= 0) {
+                    page_num = 1
+                }
+
+                newUri.appendQueryParameter(param, page_num.toString())
+            } else {
+                newUri.appendQueryParameter(
+                    param,
+                    (uri.getQueryParameter(param)!!.toInt() + 1).toString()
+                )
+            }
+        }
+
+        if (!params.contains(page_param)) {
+            newUri.appendQueryParameter(page_param, "1")
+        }
+
+        return newUri.build()
     }
 
     private fun initRecyclerView() {

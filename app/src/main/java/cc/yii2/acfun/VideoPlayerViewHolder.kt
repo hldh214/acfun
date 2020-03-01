@@ -16,12 +16,14 @@ class VideoPlayerViewHolder(itemView: View) : ViewHolder(itemView) {
     var progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
     var parent: View = itemView
     lateinit var requestManager: RequestManager
+
     @SuppressLint("SetTextI18n")
     fun onBind(mediaObject: MediaObject, requestManager: RequestManager) {
         this.requestManager = requestManager
         parent.tag = this
-        title.text = "${mediaObject.title} | ${mediaObject.duration} | ${mediaObject.video_added} | " +
-                "${mediaObject.video_views} | ${mediaObject.video_rating}"
+        title.text =
+            "${mediaObject.title} | ${mediaObject.duration} | ${mediaObject.video_added} | " +
+                    "${mediaObject.video_views} | ${mediaObject.video_rating}"
         this.requestManager
             .load(mediaObject.thumbnail)
             .override(800, 600)
