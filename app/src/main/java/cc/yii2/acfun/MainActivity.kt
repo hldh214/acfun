@@ -13,7 +13,6 @@ import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.yii2.acfun.models.MediaObject
-import cc.yii2.acfun.util.VerticalSpacingItemDecorator
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
@@ -114,8 +113,6 @@ class MainActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(this)
         mRecyclerView!!.layoutManager = layoutManager
-        val itemDecorator = VerticalSpacingItemDecorator(10)
-        mRecyclerView!!.addItemDecoration(itemDecorator)
 
         val video_list_url = editTextVideoListUrl!!.text.toString()
         val client = OkHttpClient()
