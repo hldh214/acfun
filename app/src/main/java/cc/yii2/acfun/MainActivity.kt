@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.yii2.acfun.models.MediaObject
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         val request = Request.Builder().get().url(video_list_url).build()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Toast.makeText(applicationContext, e.toString(), Toast.LENGTH_LONG)
                 call.cancel()
             }
 
